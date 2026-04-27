@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carol Studio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ─── RESET & BASE ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #222324;
+      --bg2:       #1c1d1e;
+      --card:      #272829;
+      --gold:      #ce9f4c;
+      --gold-lt:   #e2b96a;
+      --gold-dk:   #a07a30;
+      --white:     #f2ede6;
+      --muted:     rgba(242,237,230,.55);
+      --r:         16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      font-size: 17px;
+      line-height: 1.75;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* grain */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── LAYOUT ─── */
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 24px 72px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ─── TOP ORNAMENT ─── */
+    .top-ornament {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 28px 0 0;
+      justify-content: center;
+    }
+    .ornament-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-dk));
+    }
+    .ornament-line.right {
+      background: linear-gradient(90deg, var(--gold-dk), transparent);
+    }
+    .ornament-diamond {
+      width: 7px; height: 7px;
+      background: var(--gold);
+      transform: rotate(45deg);
+    }
+
+    /* ─── LOGO ─── */
+    .logo-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 44px 0 40px;
+      gap: 18px;
+      animation: rise .9s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .logo-diamond-wrap {
+      position: relative;
+      width: 88px; height: 88px;
+    }
+
+    /* outer glow ring */
+    .logo-diamond-wrap::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1px solid rgba(206,159,76,.2);
+      transform: rotate(45deg);
+      border-radius: 4px;
+      animation: pulse-ring 3.5s ease-in-out infinite;
+    }
+
+    .diamond {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold-lt) 0%, var(--gold) 45%, var(--gold-dk) 100%);
+      transform: rotate(45deg);
+      border-radius: 5px;
+      box-shadow:
+        0 0 40px rgba(206,159,76,.3),
+        0 0 12px rgba(206,159,76,.5),
+        inset 0 1px 0 rgba(255,255,255,.25);
+    }
+
+    .diamond-cs {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-45deg);
+      font-family: 'Playfair Display', serif;
+      font-size: 27px;
+      font-weight: 800;
+      color: #1a1a1b;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .logo-sub {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: -10px;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding-bottom: 48px;
+      animation: rise .9s .12s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .hero-greeting {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 9vw, 42px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+
+    .hero-greeting em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(34px, 10vw, 48px);
+      font-weight: 800;
+      color: var(--gold);
+      display: block;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .hero-intro {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--muted);
+      max-width: 360px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 40px;
+    }
+    .div-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(206,159,76,.2);
+    }
+    .div-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    /* ─── CARDS ─── */
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: rise .9s .24s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--r);
+      padding: 26px 22px 26px 26px;
+      border: 1px solid rgba(206,159,76,.1);
+      position: relative;
+      overflow: hidden;
+      transition: border-color .3s, transform .2s;
+    }
+
+    /* left gold bar */
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 16px; bottom: 16px;
+      width: 3px;
+      background: linear-gradient(180deg, var(--gold-lt), var(--gold-dk));
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* subtle corner glow */
+    .card::after {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(206,159,76,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .card:active { transform: scale(.982); border-color: rgba(206,159,76,.3); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-icon {
+      width: 38px; height: 38px;
+      background: rgba(206,159,76,.1);
+      border: 1px solid rgba(206,159,76,.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .3px;
+    }
+
+    .card-body {
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(242,237,230,.75);
+      line-height: 1.7;
+    }
+
+    /* ─── CTA SECTION ─── */
+    .cta-section {
+      text-align: center;
+      padding-top: 56px;
+      animation: rise .9s .36s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .cta-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 28px;
+      line-height: 1.3;
+    }
+
+    .cta-heading span { color: var(--gold); font-style: italic; }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 19px 24px;
+      text-decoration: none;
+      text-align: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #1b1b1c;
+      background: linear-gradient(135deg, var(--gold-lt) 0%, var(--gold) 50%, var(--gold-dk) 100%);
+      border-radius: var(--r);
+      border: none;
+      cursor: pointer;
+      box-shadow:
+        0 10px 36px rgba(206,159,76,.3),
+        0 2px 8px rgba(206,159,76,.2),
+        inset 0 1px 0 rgba(255,255,255,.2);
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .btn:active {
+      transform: scale(.97);
+      box-shadow: 0 4px 18px rgba(206,159,76,.25);
+    }
+
+    .pix-note {
+      margin-top: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+    }
+
+    .pix-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(206,159,76,.08);
+      border: 1px solid rgba(206,159,76,.18);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: .5px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center;
+      margin-top: 52px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(206,159,76,.1);
+    }
+
+    .footer-logo {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 5px;
+      color: rgba(206,159,76,.35);
+      text-transform: uppercase;
+    }
+
+    .footer-copy {
+      margin-top: 6px;
+      font-size: 12px;
+      color: rgba(242,237,230,.2);
+      font-weight: 500;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { opacity: .2; transform: rotate(45deg) scale(1); }
+      50%       { opacity: .5; transform: rotate(45deg) scale(1.06); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ornament -->
+  <div class="top-ornament">
+    <div class="ornament-line"></div>
+    <div class="ornament-diamond"></div>
+    <div class="ornament-line right"></div>
+  </div>
+
+  <!-- LOGO -->
+  <div class="logo-section">
+    <div class="logo-diamond-wrap">
+      <div class="diamond">
+        <span class="diamond-cs">CS</span>
+      </div>
+    </div>
+    <div class="logo-text">Carol Studio</div>
+    <div class="logo-sub">Soluções Digitais</div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h1 class="hero-greeting">Olá! Tudo bem?</h1>
+    <span class="hero-name">Sou a Carol.</span>
+    <p class="hero-intro">
+      Trabalho com criação de soluções digitais para destacar profissionais e pequenos negócios.
+    </p>
+  </section>
+
+  <!-- SERVICES -->
+  <div class="divider">
+    <div class="div-line"></div>
+    <span class="div-label">O que faço</span>
+    <div class="div-line"></div>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📄</div>
+        <div class="card-title">Currículos Profissionais</div>
+      </div>
+      <p class="card-body">
+        Elaboro currículos sob medida — desde o primeiro emprego para estudantes até perfis experientes, como vaqueiros e áreas operacionais.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">✦</div>
+        <div class="card-title">Identidade Visual</div>
+      </div>
+      <p class="card-body">
+        Para quem tem o próprio negócio — como serviços de manicure — crio logotipos e artes para o Instagram.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Soluções Digitais</div>
+      </div>
+      <p class="card-body">
+        Criação de catálogos digitais, páginas na web e materiais de marketing para o seu negócio crescer online.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <p class="cta-heading">Como posso te<br><span>ajudar hoje?</span></p>
+    <a href="#" class="btn">Entrar em Contato</a>
+    <div style="margin-top:16px;">
+      <span class="pix-badge">🔑 Aceito pagamentos via PIX</span>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Carol Studio</div>
+    <div class="footer-copy">© 2025 · Todos os direitos reservados</div>
+  </footer>
+
+</div>
+
+</body>
+</html>
